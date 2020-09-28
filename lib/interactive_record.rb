@@ -53,6 +53,8 @@ class InteractiveRecord
     end 
 
     def self.find_by(attr)
-        DB[:conn].execute("SELECT * FROM #{self.table_name} WHERE #{attr.keys[0]} = '#{attr.values[0]}'")
+        value = attr.values.first
+        attr_value = value.class == Fixnum ? value : "'#{value}'"
+        DB[:conn].execute("SELECT * FROM #{self.table_name} WHERE #{attr.keys.first} = #{attr_value}")
     end 
 end
