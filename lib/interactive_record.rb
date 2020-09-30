@@ -9,7 +9,7 @@ class InteractiveRecord
         end 
     end 
 
-    def self.table_name 
+    def self.table_name
         self.to_s.downcase.pluralize
     end 
 
@@ -54,7 +54,7 @@ class InteractiveRecord
 
     def self.find_by(attr)
         value = attr.values.first
-        attr_value = value.class == Fixnum ? value : "'#{value}'"
+        attr_value = value.class == Integer ? value : "'#{value}'"
         DB[:conn].execute("SELECT * FROM #{self.table_name} WHERE #{attr.keys.first} = #{attr_value}")
     end 
 end
