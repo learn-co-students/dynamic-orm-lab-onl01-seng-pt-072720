@@ -56,9 +56,11 @@ class InteractiveRecord
     end
 
     def self.find_by(attr)
-        binding.pry
-        selection = self.column_names.select{|column| column == attr}
-        sql = "SELECT * FROM #{self.table_name} WHERE #{selection} = ?"
-        DB[:conn].execute(sql, selection)
+        # binding.pry
+        # selection = self.column_names.select{|column| column == attr}
+        key = attr.keys[0]
+        value = attr.values[0]
+        sql = "SELECT * FROM #{self.table_name} WHERE #{key} = ?"
+        DB[:conn].execute(sql, value)
     end
 end
