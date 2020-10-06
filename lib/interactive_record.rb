@@ -17,29 +17,18 @@ class InteractiveRecord
     end
 
     def self.column_names
-        DB[:conn].results_as_hash = true
+        # DB[:conn].results_as_hash = true
 
-        sql = "PRAGMA table_info('#{table_name}')"
+        sql = "pragma table_info('#{table_name}')"
 
         table_info = DB[:conn].execute(sql)
         column_names = []
 
         table_info.each do |column|
             column_names << column["name"]
-            binding.pry
         end
 
         column_names.compact
-    end
-
-    def save
-        sql = <<-SQL
-        INSERT INTO #{table_name_for_insert} (#{col_names_for_insert})
-        VALUES (#{values_for_insert})
-        SQL
-        # binding.pry
-        DB[:conn].execute(sql)
-        @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
     end
 
     def table_name_for_insert
@@ -56,6 +45,16 @@ class InteractiveRecord
             values << "'#{send(column_name)}'" unless send(column_name).nil?
         end
         values.join(", ")
+    end
+
+    def save
+        sql = <<-SQL
+        INSERT INTO #{table_name_for_insert} (#{col_names_for_insert})
+        VALUES (#{values_for_insert})
+        SQL
+        # binding.pry
+        DB[:conn].execute(sql)
+        @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
     end
 
     def self.find_by_name(name)
