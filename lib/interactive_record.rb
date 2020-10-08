@@ -1,5 +1,6 @@
 require_relative "../config/environment.rb"
 require 'active_support/inflector'
+require 'pry'
 
 class InteractiveRecord
 
@@ -53,7 +54,9 @@ class InteractiveRecord
     end
 
     def self.find_by(attribute)
-      sql= "SELECT * FROM (#{self.table_name}) WHERE name  = ?, #{attribute}"
+      value = attribute.values.first   
+      formatted_value = value.class == Fixnum ? value : "'#{value}'"
+      sql= "SELECT * FROM #{self.table_name} WHERE #{attribute.keys.first} = #{formatted_value}"
       DB[:conn].execute(sql)
     end
 
